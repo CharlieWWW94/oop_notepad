@@ -4,6 +4,8 @@ from pickle import HIGHEST_PROTOCOL, load, dump
 
 
 class Tui:
+
+
     def __init__(self):
         self.notepad = self._check_for_db()
 
@@ -17,6 +19,7 @@ class Tui:
         self.active_func()
 
 
+
     def _check_for_db(self):
         try:
             with open('db.pickle', 'rb') as pickled_np:
@@ -24,18 +27,19 @@ class Tui:
                 return np
         except:
             TypeError
-            self._new_notepad()
+            return self._new_notepad()
     
+
     def _new_notepad(self):
         response = input('Would you like to begin a new notepad? Y/N')
         
         if response == 'Y':
             notepad_name = input('What would you like to name your notepad?')
             new_notepad = notepad.NotePad(notepad_name)
-            with open('db.pickle', 'wb') as pickled_np:
-                dump(new_notepad, pickled_np, protocol=HIGHEST_PROTOCOL)
+            new_notepad.save()
+            print(f'{new_notepad.name} has been saved.')
             return new_notepad
-    
+
     def print_pad(self):
         self.notepad.print()
 
@@ -49,13 +53,10 @@ class Tui:
         self.fresh_note = notes.Note(title=note_title, note=note_content, tags=note_tag)
 
         save_note = input(f'Save note? Y/N\nTitle: {self.fresh_note.title}\n{self.fresh_note.note}\n{self.fresh_note.tags}\n{self.fresh_note.date}')
+        
         if save_note == 'Y':
-            self.save_note()
-
-    def save_note(self):
-            self.notepad.add(self.fresh_note)
-            with open('db.pickle', 'wb') as pickled_np:
-                dump(self.notepad, pickled_np, protocol=HIGHEST_PROTOCOL)
+            self.notepad.save(note_to_add=self.fresh_note)
+           
 
 
 

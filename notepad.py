@@ -1,5 +1,4 @@
-import pickle
-
+from pickle import HIGHEST_PROTOCOL, load, dump
 
 class NotePad:
     def __init__(self, name):
@@ -15,7 +14,10 @@ class NotePad:
         print('--------------')
         for i in self.notepad:
             print(f'\nNote Title: {i.title}\nDate Added:{i.date}\n\nNote Body: {i.note}\n{i.tags}\n--------------')
-            #print(i.date)
-            #print(i.title)
-            #print(i.note)
-            #print(i.tags)
+    
+    def save(self, note_to_add = None):
+
+        if note_to_add:
+            self.add(entry=note_to_add)
+        with open('db.pickle', 'wb') as pickled_np:
+                dump(self, pickled_np, protocol=HIGHEST_PROTOCOL)
